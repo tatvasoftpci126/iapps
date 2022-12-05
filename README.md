@@ -10,6 +10,7 @@ For building and running the application you need:
 
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
+- [POSTGRES 11] (https://www.postgresql.org/download/windows/)
 
 
 ## Running the application locally
@@ -27,4 +28,10 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 
 ```shell
 mvn spring-boot:run
+```
+
+## Running Unit test cases
+
+```shell
+mvn test
 ```
