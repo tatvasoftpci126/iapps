@@ -1,12 +1,18 @@
 package com.tatva.iapps.service;
 
+import com.tatva.iapps.dto.EpaperSearchRequest;
 import com.tatva.iapps.entity.Epaper;
 import com.tatva.iapps.repository.EpaperRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,22 @@ public class EpaperServiceUnitTest {
         epaperList.add(epaper);
         doReturn(epaperList).when(epaperRepository).findAll();
         List<Epaper> result = epaperService.getAllEpaperList();
+        assertEquals(result, epaperList);
+    }
+
+    @Test
+    public void testGetAllEpaperListWithPaginationAndFilter() {
+        EpaperSearchRequest epaperSearchRequest = new EpaperSearchRequest();
+        epaperSearchRequest.setPageNumber(0);
+        epaperSearchRequest.setPageSize(1);
+        epaperSearchRequest.setSearchText("");
+        Epaper epaper = new Epaper();
+        List<Epaper> epaperList = new ArrayList<>();
+        epaperList.add(epaper);
+        Page<Epaper> epaperPage = new PageImpl<>(epaperList, Pageable.ofSize(1), 1);
+
+        doReturn(epaperPage).when(epaperRepository).findByNewspaperNameContainingIgnoreCase(PageRequest.of(0,1),epaperSearchRequest.getSearchText());
+        List<Epaper> result = epaperService.getAllEpaperListWithPaginationAndFilter(epaperSearchRequest);
         assertEquals(result, epaperList);
     }
 

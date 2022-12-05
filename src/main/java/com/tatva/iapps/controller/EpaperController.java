@@ -1,6 +1,5 @@
 package com.tatva.iapps.controller;
 
-import com.tatva.iapps.dto.EpaperRequest;
 import com.tatva.iapps.dto.EpaperSearchRequest;
 import com.tatva.iapps.entity.Epaper;
 import com.tatva.iapps.service.EpaperService;
