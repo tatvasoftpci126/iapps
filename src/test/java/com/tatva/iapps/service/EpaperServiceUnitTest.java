@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +50,16 @@ public class EpaperServiceUnitTest {
         epaperSearchRequest.setPageNumber(0);
         epaperSearchRequest.setPageSize(1);
         epaperSearchRequest.setSearchText("");
+        epaperSearchRequest.setStartDate(LocalDateTime.now().minusWeeks(1));
+        epaperSearchRequest.setEndDate(LocalDateTime.now());
         Epaper epaper = new Epaper();
+        epaper.setUploadDateTime(LocalDateTime.now().minusDays(1));
+        epaper.setNewspaperName("");
         List<Epaper> epaperList = new ArrayList<>();
         epaperList.add(epaper);
         Page<Epaper> epaperPage = new PageImpl<>(epaperList, Pageable.ofSize(1), 1);
 
-        doReturn(epaperPage).when(epaperRepository).findByNewspaperNameContainingIgnoreCase(PageRequest.of(0,1),epaperSearchRequest.getSearchText());
+        doReturn(epaperPage).when(epaperRepository).findByUploadDateTimeBetweenAndNewspaperNameContainingIgnoreCase(PageRequest.of(0,1),epaperSearchRequest.getStartDate(),epaperSearchRequest.getEndDate(),epaperSearchRequest.getSearchText());
         List<Epaper> result = epaperService.getAllEpaperListWithPaginationAndFilter(epaperSearchRequest);
         assertEquals(result, epaperList);
     }

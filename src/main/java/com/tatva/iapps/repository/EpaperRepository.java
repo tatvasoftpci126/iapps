@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 
 /**
  * Repository class for Epaper.
@@ -14,5 +16,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EpaperRepository extends JpaRepository<Epaper, Long> {
 
-    Page<Epaper> findByNewspaperNameContainingIgnoreCase(PageRequest pr, String newspaperName);
+    Page<Epaper> findByUploadDateTimeBetweenAndNewspaperNameContainingIgnoreCase(PageRequest pr, LocalDateTime startDate, LocalDateTime endDate, String newspaperName);
 }

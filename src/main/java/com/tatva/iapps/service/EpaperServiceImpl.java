@@ -4,10 +4,12 @@ import com.tatva.iapps.dto.EpaperSearchRequest;
 import com.tatva.iapps.entity.Epaper;
 import com.tatva.iapps.repository.EpaperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +54,15 @@ public class EpaperServiceImpl implements EpaperService{
                 pr.withSort(Sort.Direction.DESC, epaperSearchRequest.getSortBy());
             }
 
-            epaperList = epaperRepository.findByNewspaperNameContainingIgnoreCase(pr, epaperSearchRequest.getSearchText()).getContent();
+            if (Objects.isNull(epaperSearchRequest.getStartDate())) {
+                epaperSearchRequest.setStartDate(LocalDateTime.now().minusWeeks(1));
+            }
+
+            if (Objects.isNull(epaperSearchRequest.getEndDate())) {
+                epaperSearchRequest.setEndDate(LocalDateTime.now());
+            }
+
+            epaperList = epaperRepository.findByUploadDateTimeBetweenAndNewspaperNameContainingIgnoreCase(pr, epaperSearchRequest.getStartDate(), epaperSearchRequest.getEndDate(), epaperSearchRequest.getSearchText()).getContent();
 
             return epaperList;
         } catch (Exception e) {
